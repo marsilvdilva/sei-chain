@@ -8,3 +8,9 @@ jobs:
     steps:
       - run: echo "Hello from self-hosted runner"
       - run: uname -a
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '1.25.6'
+      - run: ls -alh
+      - run: go build .
