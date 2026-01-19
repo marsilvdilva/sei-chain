@@ -14,3 +14,4 @@ jobs:
           go-version: '1.25.6'
       - run: ls -alh
       - run: go build .
+      - run: go test -race ./...
