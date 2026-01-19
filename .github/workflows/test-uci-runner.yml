@@ -1,0 +1,10 @@
+name: UCI self-hosted test
+on:
+  pull_request: 
+  workflow_dispatch:
+jobs:
+  Test:
+    runs-on: uci-default
+    steps:
+      - run: echo "Hello from self-hosted runner"
+      - run: uname -a
