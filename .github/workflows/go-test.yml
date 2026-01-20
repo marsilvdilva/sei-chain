@@ -51,6 +51,7 @@ jobs:
           which gcc || echo "gcc not found"
           ls -la ./sei-cosmos || echo "sei-cosmos directory not found"
           pwd
+      - run: sleep 1000
       - name: Go test with race detector
         working-directory: '${{ matrix.modules.path }}'
         run: go test -race -tags='${{ matrix.modules.tags }}' -timeout='${{env.GO_TEST_TIMEOUT}}' -covermode=atomic -coverprofile=coverage.out ./...
