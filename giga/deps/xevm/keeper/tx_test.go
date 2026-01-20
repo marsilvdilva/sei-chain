@@ -12,8 +12,7 @@ import (
 )
 
 func TestRemoveFirstNTxHashes(t *testing.T) {
-	k := &testkeeper.EVMTestApp.GigaEvmKeeper
-	ctx := testkeeper.EVMTestApp.GetContextForDeliverTx([]byte{})
+	k, ctx := testkeeper.MockEVMKeeper(t)
 
 	for i := byte(1); i <= 101; i++ {
 		setTxHash(ctx, k, i, 102-i)

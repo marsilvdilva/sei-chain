@@ -16,10 +16,11 @@ import (
 	"github.com/sei-protocol/sei-chain/app"
 	evmkeeper "github.com/sei-protocol/sei-chain/giga/deps/xevm/keeper"
 	evmtypes "github.com/sei-protocol/sei-chain/giga/deps/xevm/types"
+	"github.com/sei-protocol/sei-chain/occ_tests/utils"
 	"github.com/stretchr/testify/require"
 )
 
-var EVMTestApp = app.SetupWithDefaultHome(false, true, false)
+var EVMTestApp = app.SetupWithAppOptsAndDefaultHome(false, app.TestAppOpts{UseSc: true, EnableGiga: true, EnableGigaOCC: true}, false, false)
 var mockKeeper *evmkeeper.Keeper
 var mockCtx sdk.Context
 var mtx = &sync.Mutex{}
@@ -52,9 +53,16 @@ func MockEVMKeeperWithPrecompiles() (*evmkeeper.Keeper, sdk.Context) {
 	return &k, ctx
 }
 
-func MockEVMKeeper(t *testing.T) (*evmkeeper.Keeper, sdk.Context) {
-	testApp := app.Setup(t, false, false, false)
+func MockApp(t *testing.T) (*app.App, sdk.Context) {
+	accts := utils.NewTestAccounts(1)
+	testWrapper := app.NewGigaTestWrapper(t, time.Now(), accts[0].PublicKey, false, false)
+	testApp := testWrapper.App
 	ctx := testApp.GetContextForDeliverTx([]byte{}).WithBlockHeight(8).WithBlockTime(time.Now())
+	return testApp, ctx
+}
+
+func MockEVMKeeper(t *testing.T) (*evmkeeper.Keeper, sdk.Context) {
+	testApp, ctx := MockApp(t)
 	k := testApp.GigaEvmKeeper
 	k.InitGenesis(ctx, *evmtypes.DefaultGenesis())
 

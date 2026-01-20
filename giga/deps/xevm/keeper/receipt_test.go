@@ -13,8 +13,7 @@ import (
 )
 
 func TestReceipt(t *testing.T) {
-	k := &testkeeper.EVMTestApp.GigaEvmKeeper
-	ctx := testkeeper.EVMTestApp.GetContextForDeliverTx([]byte{})
+	k, ctx := testkeeper.MockEVMKeeper(t)
 	txHash := common.HexToHash("0x0750333eac0be1203864220893d8080dd8a8fd7a2ed098dfd92a718c99d437f2")
 	_, err := k.GetReceipt(ctx, txHash)
 	require.NotNil(t, err)
@@ -28,8 +27,7 @@ func TestReceipt(t *testing.T) {
 }
 
 func TestGetReceiptWithRetry(t *testing.T) {
-	k := &testkeeper.EVMTestApp.GigaEvmKeeper
-	ctx := testkeeper.EVMTestApp.GetContextForDeliverTx([]byte{})
+	k, ctx := testkeeper.MockEVMKeeper(t)
 	txHash := common.HexToHash("0x0750333eac0be1203864220893d8080dd8a8fd7a2ed098dfd92a718c99d437f2")
 
 	// Test max retries exceeded first
@@ -50,8 +48,7 @@ func TestGetReceiptWithRetry(t *testing.T) {
 }
 
 func TestFlushTransientReceipts(t *testing.T) {
-	k := &testkeeper.EVMTestApp.GigaEvmKeeper
-	ctx := testkeeper.EVMTestApp.GetContextForDeliverTx([]byte{})
+	k, ctx := testkeeper.MockEVMKeeper(t)
 	txHash := common.HexToHash("0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef")
 	receipt := &types.Receipt{TxHashHex: txHash.Hex(), Status: 1}
 
@@ -87,8 +84,7 @@ func TestFlushTransientReceipts(t *testing.T) {
 }
 
 func TestDeleteTransientReceipt(t *testing.T) {
-	k := &testkeeper.EVMTestApp.GigaEvmKeeper
-	ctx := testkeeper.EVMTestApp.GetContextForDeliverTx([]byte{})
+	k, ctx := testkeeper.MockEVMKeeper(t)
 	txHash := common.HexToHash("0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef")
 	receipt := &types.Receipt{TxHashHex: txHash.Hex(), Status: 1}
 
@@ -105,8 +101,7 @@ func TestDeleteTransientReceipt(t *testing.T) {
 // Flush transient receipts should not adjust cumulative gas used for legacy receipts
 func TestFlushTransientReceiptsLegacyReceipts(t *testing.T) {
 	// Pacific-1
-	k := &testkeeper.EVMTestApp.GigaEvmKeeper
-	ctx := testkeeper.EVMTestApp.GetContextForDeliverTx([]byte{})
+	k, ctx := testkeeper.MockEVMKeeper(t)
 	ctx = ctx.WithChainID("pacific-1")
 
 	// Create two receipts in same block
