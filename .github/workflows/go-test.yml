@@ -44,6 +44,13 @@ jobs:
 #            /usr/local/lib/android \
 #            /opt/ghc /opt/hostedtoolcache/CodeQL
 #          sudo docker image prune --all --force
+      - name: Debug environment
+        run: |
+          which go
+          go version
+          which gcc || echo "gcc not found"
+          ls -la ./sei-cosmos || echo "sei-cosmos directory not found"
+          pwd
       - name: Go test with race detector
         working-directory: '${{ matrix.modules.path }}'
         run: go test -race -tags='${{ matrix.modules.tags }}' -timeout='${{env.GO_TEST_TIMEOUT}}' -covermode=atomic -coverprofile=coverage.out ./...
